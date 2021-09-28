@@ -23,7 +23,7 @@ class Circle_list{
         void List_init();
         void Show();
         void union_OL(Circle_list & list);
-};
+};                                                     
 
 int main()
 {
@@ -88,7 +88,7 @@ void Circle_list::union_OL(Circle_list & list)
             rc = pa;
             pa = pa->next;
         }
-        else if(pa->elem<pb->elem)
+        else if(pa->elem>pb->elem)
         {
             rc->next = pb;
             rc = pb;
