@@ -24,6 +24,8 @@ int main()
     s.Push(1);
     s.Push(2);
     s.StackTraverse();
+    int res = s.Pop();
+    s.StackTraverse();
     return 0;
 }
 
@@ -46,4 +48,18 @@ void Stack::StackTraverse(){
     {
         cout<<elem[i]<<" ";
     }
+    cout<<endl;
+}
+
+int Stack::Pop()
+{
+    int res;
+    res = elem[top];
+    top = top - 1;
+    return res;
+}
+
+void Stack::ClearStack()
+{
+    top = 0;
 }
