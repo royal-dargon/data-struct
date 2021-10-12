@@ -56,6 +56,7 @@ int main()
     char temp2[] = "12";
     String str1(temp);
     String str2(temp2);
+    String tmp(temp);
     char temp1[] = "cb";
     str1.IsSubstring(temp1);
     str1.IsSubstring(str2);
