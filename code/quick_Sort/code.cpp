@@ -3,7 +3,6 @@ this is the code about quick sort
 */
 
 #include <iostream>
-#include <unistd.h>
 
 using namespace std;
 

@@ -1,4 +1,4 @@
-// 教材266 第七大题第二小题
+// 教材266 第七大题第五小题
 #include <iostream>
 #include <string.h>
 #include <vector>
@@ -34,7 +34,7 @@ class Student {
             for(i = 0;i < count;i ++) {
                 sum = sum + Info[i].score;
             }
-            cout<<sum/count<<endl;
+            cout<<"平均成绩："<<sum/count<<endl;
         }
 };
 
@@ -44,8 +44,10 @@ int main()
     Student stu1(10001,Name);
     char Sub1[] = "语文";
     char Sub2[] = "数学";
+    char Sub3[] = "英语";
     stu1.Push_Sore(Sub1,88);
     stu1.Push_Sore(Sub2,89.5);
+    stu1.Push_Sore(Sub3,90);
     stu1.ShowInfo();
     stu1.get_average();
     return 0;
