@@ -76,7 +76,7 @@ void getNext(char str[],int next[]) {
                 if(str[m] != str[i+1-k+m])
                     break;
             }
-             if(m == k)
+            if(m == k)
             {
                 next[i] = k;
                 break;
