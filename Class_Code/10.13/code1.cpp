@@ -53,12 +53,39 @@ void Show_shopres(Buying *head, double sum);
 
 int main()
 {
+    cout << "--------------欢迎来到超市管理系统---------------" << endl;
     Node *head = Creat();
-    CreatByUser(head);
-    Show_commodity(head);
-    double sum = 0;
-    Buying* res = Buy_Things(head,&sum);
-    Show_shopres(res,sum);
+    // 用来识别身份的值
+    int role;
+    cout << "请输入您的身份: 1.超市管理员  2.购物者" << endl;
+    if(role == 1) {
+        // temp 用来描述管理员对下一步操作的选择
+        int temp, flag = 1;
+        while(flag) {
+            cout << "请输入您接下来想要进行的操作: 1.查询库房内的商品 2.添加商品 3.删除商品 4.退出"<<endl;
+            cin >> temp;
+            if(temp == 1) {
+                Show_commodity(head);
+            }
+            else if(temp == 2) {
+                CreatByUser(head);
+            }
+            else if(temp == 3) {
+
+            } else {
+                cout << "辛苦了，管理员！" << endl;
+                flag = 0;
+            }
+        }
+        //CreatByUser(head);
+        //Show_commodity(head);
+    }
+    else if(role == 2) {
+        double sum = 0;
+        Show_commodity(head);
+        Buying* res = Buy_Things(head,&sum);
+        Show_shopres(res,sum);
+    }
     Write_File(head);
     return 0;
 }
