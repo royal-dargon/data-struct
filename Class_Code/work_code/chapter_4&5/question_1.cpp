@@ -1,118 +1,69 @@
-// 教材第266页 第七大题第七小题
+// 题目的意思是删除最少的括号让剩下的字符串形成有效的括号
 #include <iostream>
+#include <string>
 #include <string.h>
-#include <math.h>
+#include <stdlib.h>
 
 using namespace std;
 
-void getNext(char str[],int next[]);
-bool KMP(char str[],char tar[]);
-
-class String {
-    private:
-        char * Str;
-    public:
-        String(char *str) {
-            int lenth = strlen(str);
-            Str = new char[lenth+1];
-            strcpy(Str,str);
-            cout<<Str<<endl;
-        }
-        bool IsSubstring(char *str) {
-            bool res = KMP(Str,str);
-            cout<<res<<endl;
-            return res;
-        }
-        bool IsSubstring(const String & str) {
-            bool res = KMP(Str,str.Str);
-            cout<<res<<endl;
-            return res;
-        }
-        int str2num() {
-            int res = 0,i;
-            int lenth = strlen(Str);
-            int temp = lenth;
-            for(i = 0;i < lenth;i ++) {
-                res = (Str[i]-48)*pow(10,temp-1) + res;
-                temp --;
-            }
-            return res;
-        }
-        void toUppercase() {
-            int lenth = strlen(Str);
-            int i;
-            for(i = 0;i < lenth;i ++) {
-                if(Str[i] >= 'a' && Str[i] <= 'z') {
-                    Str[i] = Str[i] - 32;
-                }
-            }
-            cout<<Str<<endl;
-        }
+struct Stack {
+    int *elem;
+    int top;
 };
 
-int main() 
-{
-    char temp[] = "abccc";
-    char temp2[] = "12";
-    String str1(temp);
-    String str2(temp2);
-    String tmp(temp);
-    char temp1[] = "cb";
-    str1.IsSubstring(temp1);
-    str1.IsSubstring(str2);
-    int res = str2.str2num();
+class Solution {
+public:
+    string minRemoveToMakeValid(string s) {
+        struct Stack temp;
+        temp.top = -1;
+        temp.elem = new int[s.size()];
+        int *move;
+        move = new int[s.size()];
+        int MoveCount = 0;
+        int i;
+        for(i = 0;i < s.size()-1;i ++) {
+            if(s[i] == '(') {
+                temp.top = temp.top + 1;
+                temp.elem[temp.top];
+            }
+            if(s[i] == ')') {
+                if(temp.top == -1) {
+                    move[MoveCount] = i;
+                    MoveCount ++;
+                } else {
+                    temp.top --;
+                }
+            }
+        }
+        if(temp.top != -1) {
+            while(temp.top != -1) {
+                move[MoveCount] = temp.elem[temp.top];
+                temp.top --;
+                MoveCount ++;
+            }
+        }
+        // 下面是按照刚刚所得需要删除的字符的数组进行处理.
+        //sort(move.begin(),move.end());
+        int count = 0,j = 0;
+        char res[10000];
+        for(i = 0;i < s.size()-1;i ++) {
+            if(i != move[j]) {
+                res[count++] = s[i]; 
+            } else {
+                j ++;
+            }
+        }
+        char res1[100];
+        strncpy(res1,res,count);
+        string res2 = res1;
+        return res2;
+    }
+};
+
+int main() {
+    string str = "le(e(t(c)o())de)";
+    Solution tmp;
+    string res = tmp.minRemoveToMakeValid(str);
     cout<<res<<endl;
-    str1.toUppercase();
     return 0;
-}
-
-void getNext(char str[],int next[]) {
-    int j = 0;
-    int i,k,m;
-    int flag;
-    for(i = 0;i < strlen(str);i ++) {
-        for(k = i;k > 0;k --) {
-            for(m = 0;m < k;m ++) {
-                if(str[m] != str[i+1-k+m])
-                    break;
-            }
-            if(m == k)
-            {
-                next[i] = k;
-                break;
-            }
-        }
-    }
-}
-
-bool KMP(char str[],char tar[])
-{
-    int i = 0;
-    int j = 0;
-    int lengh;
-    int next[100];
-    bool res = false;
-    lengh = strlen(tar);
-    memset(next,0,100*sizeof(int));
-    getNext(tar, next);
-    while(str[i] != '\0')
-    {
-        if(str[i] == tar[j])
-        {
-            i ++;
-            j ++;
-        } else {
-            if(j == 0)
-            {
-                i ++;
-            }
-            j = next[j];
-        }
-        if(j == lengh)
-        {
-            res = true;
-            return res;
-        }
-    }
-    return res;
 }
