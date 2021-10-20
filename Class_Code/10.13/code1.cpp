@@ -48,13 +48,17 @@ void Show_commodity(Node *head);
 void Write_File(Node *head);
 // 购买者的函数，购买者通过查看链表的Id对商品进行购买
 Buying* Buy_Things(Node *head,double *sum);
+// 用来展示小票的服务
+void Show_shopres(Buying *head, double sum);
 
 int main()
 {
     Node *head = Creat();
     CreatByUser(head);
-    //cout << "!";
     Show_commodity(head);
+    double sum = 0;
+    Buying* res = Buy_Things(head,&sum);
+    Show_shopres(res,sum);
     Write_File(head);
     return 0;
 }
@@ -75,7 +79,7 @@ Node* Creat() {
     ifstream infile;
     infile.open("shop.txt");
     cout << "Reading from the file" << endl;
-    while(!infile.eof()) {
+    while(infile.good() && infile.peek() != EOF) {
         pnew = new struct Node;
         infile >> fid;
         pnew->Id = fid;
@@ -110,6 +114,7 @@ void Show_commodity(Node *head) {
         cout<<"商品数量:"<<p->number<<endl;
         p = p->next;
     }
+    cout<<endl;
 }
 
 void CreatByUser(Node *head) {
@@ -152,6 +157,7 @@ void CreatByUser(Node *head) {
         cout<<"do you want to continue:(1/0) ";
         cin >> flag;
     }
+    head = p;
 }
 
 void Write_File(Node *head) {
@@ -180,6 +186,7 @@ Buying* Buy_Things(Node *head,double *sum) {
     res->next = NULL;
     tail = res;
     cout << "--------购买界面-----------" << endl;
+    cout << endl;
     while(flag) {
         cout << "请输入您要购买商品的ID: ";
         cin >> id;
@@ -198,14 +205,31 @@ Buying* Buy_Things(Node *head,double *sum) {
                 pnew->model = p->model;
                 pnew->price = p->price;
                 *sum = *sum + p->price;
+                pnew->next = NULL;
+                tail->next = pnew;
+                tail = pnew;
             }
             p = p->next;
         }
         if(flag1 == 1) {
             cout << "you put in wrong Id!"<<" please put in again!"<<endl;
         }
-        cout << "do you want continue to buy : (1/0)";
+        cout << "do you want continue to buy (1/0): ";
         cin >> flag;
     }
     return res;
+}
+
+// 先通过链表显示所购买的商品，最后显示最后的收款总额
+void Show_shopres(Buying *head,double sum) {
+    cout << endl;
+    cout << "-----------收营小票--------------"<<endl; 
+    Buying *p;
+    p = head->next;
+    while(p != NULL) {
+        cout<<"商品名称："<<p->name<<"\t"<<"商品型号："<<p->model<<"\t"<<"商品单价: "<<p->price<<endl;
+        cout<<endl;
+        p = p->next;
+    }
+    cout << "the sum is "<<sum<<endl;
 }
