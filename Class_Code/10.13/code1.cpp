@@ -50,6 +50,26 @@ void Write_File(Node *head);
 Buying* Buy_Things(Node *head,double *sum);
 // 用来展示小票的服务
 void Show_shopres(Buying *head, double sum);
+// 用来提供对链表的删除的作用
+void Delete_Things(Node *head);
+// 一个对修改信息总的分支
+void ChangeInfo(Node *head);
+// 用来对链表中的货物的价格进行修改的函数
+void Change_Things_Price(Node *head);
+// 用来对存储的商品的名称进行修改
+void Change_Things_Name(Node *head);
+// 用来对存储的商品的型号进行修改
+void Change_Things_Model(Node *head);
+// 用来对存储的商品的数量进行修改
+void Change_Things_Num(Node *head);
+// 对购物车进行查看的操作
+void Look_Buying(Buying *res);
+// 对购物车进行修改的操作
+void Change_Buying(Buying *res,Node *head,double *sum);
+// 对购物车内商品进行删除的操作
+void Delete_Buying(Buying *res,Node *head,double *sum);
+// 用来继续添加购物车
+void Add_Buying(Buying *res,Node *head, double *sum);
 
 int main()
 {
@@ -58,11 +78,12 @@ int main()
     // 用来识别身份的值
     int role;
     cout << "请输入您的身份: 1.超市管理员  2.购物者" << endl;
+    cin >> role;
     if(role == 1) {
         // temp 用来描述管理员对下一步操作的选择
         int temp, flag = 1;
         while(flag) {
-            cout << "请输入您接下来想要进行的操作: 1.查询库房内的商品 2.添加商品 3.删除商品 4.退出"<<endl;
+            cout << "管理员，请输入您接下来想要进行的操作: 1.查询库房内的商品 2.添加商品 3.删除商品 4.修改信息 5.退出"<<endl;
             cin >> temp;
             if(temp == 1) {
                 Show_commodity(head);
@@ -71,7 +92,10 @@ int main()
                 CreatByUser(head);
             }
             else if(temp == 3) {
-
+                Delete_Things(head);
+            }
+            else if(temp == 4) {
+                ChangeInfo(head);
             } else {
                 cout << "辛苦了，管理员！" << endl;
                 flag = 0;
@@ -81,10 +105,26 @@ int main()
         //Show_commodity(head);
     }
     else if(role == 2) {
+        cout << "尊敬的顾客请输入您要进行的操作：1.查看商品 2.选购商品 3.查看购物车 4.修改购物车 5.结账(离开)" << endl;
+        int choice = 0;
+        Buying *res;
         double sum = 0;
-        Show_commodity(head);
-        Buying* res = Buy_Things(head,&sum);
-        Show_shopres(res,sum);
+        cin >> choice;
+        if(choice == 1) {
+            Show_commodity(head);
+        }
+        else if(choice == 2) {
+            Show_commodity(head);
+            res = Buy_Things(head,&sum);
+        }
+        else if(choice == 3) {
+            Look_Buying(res);
+        }
+        else if(choice == 4) {
+            Change_Buying(res,head,&sum);
+        } else {
+            Show_shopres(res,sum);
+        }
     }
     Write_File(head);
     return 0;
@@ -250,13 +290,143 @@ Buying* Buy_Things(Node *head,double *sum) {
 // 先通过链表显示所购买的商品，最后显示最后的收款总额
 void Show_shopres(Buying *head,double sum) {
     cout << endl;
-    cout << "-----------收营小票--------------"<<endl; 
+    cout << "------------------收营小票-----------------"<<endl; 
     Buying *p;
     p = head->next;
     while(p != NULL) {
-        cout<<"商品名称："<<p->name<<"\t"<<"商品型号："<<p->model<<"\t"<<"商品单价: "<<p->price<<endl;
+        cout<<"商品名称："<< p->name <<"\t"<<"商品型号："<<p->model<<"\t"<<"商品单价: "<<p->price<<endl;
         cout<<endl;
         p = p->next;
     }
     cout << "the sum is "<<sum<<endl;
 }
+
+
+// 通过对输入的Id进行判断，然后进行对链表的遍历，然后进行删除操作。
+void Delete_Things(Node *head) {
+    cout << "-----------现在是删除界面------------" << endl;
+    Show_commodity(head);
+    cout << "请输入您要删除的商品的Id：" << endl;
+    int id;
+    cin >> id;
+    Node *p = head;
+    while(p->next != NULL) {
+        if(p->next->Id == id) {
+            break;
+        }
+        p = p->next;
+    }
+    if(p == NULL) {
+        cout << "您输入的Id在当前系统中是不存在的! " << endl;
+        return;
+    } else {
+        Node *temp,*q;
+        temp = p->next->next;
+        q = p->next;
+        p->next = temp;
+        delete q;
+    }
+    cout << "删除成功" << endl;
+}
+
+//用来对下一步具体要修改什么信息的确定
+void ChangeInfo(Node *head) {
+    cout << "现在是修改界面" << endl;
+    // 用来存储具体需要进行那个操作
+    int choice = 0;
+    cout << "请选择您要修改的信息 1.商品名称 2.商品的型号 3.商品的价格 4.商品的数量 5.放弃修改" << endl;
+    cin >> choice;
+    if(choice == 1) {
+
+    }
+    else if(choice == 2) {
+
+    }
+    else if(choice == 3) {
+        Change_Things_Price(head);
+    }
+    else if(choice == 4) {
+
+    } else {
+        cout << "成功放弃本次修改！" << endl;
+    }
+    return;
+}
+
+// 用来给管理员对链表中存储的商品的价格进行修改的操作
+void Change_Things_Price(Node *head) {
+    cout << "----------------现在是对商品价格进行修改的操作---------------" << endl;
+    Show_commodity(head);
+    cout << "请输入您需要修改商品的id" << endl;
+    // 用来对临时存储修改商品的id
+    int cid;
+    cin >> cid;
+    Node *p = head->next;
+    // 用来对需要修改的位置进行确定
+    while(p != NULL) {
+        if(p->Id == cid) {
+            break;
+        }
+        p = p->next;
+    }
+    if(p == NULL) {
+        cout << "您输入了错误的id，这个id尚且不存在!" << endl;
+        return;
+    }
+    cout << "您需要修改的商品的价格当前为：" << p->price << endl;
+    double cprice = p->price;
+    cout << "请输入您要修改为的价格 ：" ;
+    cin >> cprice;
+    p->price = cprice;
+    cout << "修改成功！" << endl;
+}
+
+// 修改商品的名称
+void Change_Things_Name(Node *head) {
+
+}
+
+// 修改商品的型号
+void Change_Things_Model(Node *head) {
+
+}
+
+// 修改商品的数量
+void Change_Things_Num(Node *head) {
+
+}
+
+// 查看购物车
+void Look_Buying(Buying *res) {
+
+}
+
+// 修改购物车
+void Change_Buying(Buying *res,Node *head,double *sum) {
+    cout << "----------------现在是修改购物车的界面----------------- " << endl;
+    cout << "尊敬的客户请选择您接下来需要进行的操作：1.删除商品 2.继续添加商品 3.离开 " << endl;
+    int choice = 0;
+    cin >> choice;
+    if(choice == 1) {
+        Delete_Buying(res,head,sum);
+    }
+    else if(choice == 2) {
+        Add_Buying(res,head,sum);
+    } else {
+        cout << "放弃修改购物车!" << endl;
+    }
+    return;
+}
+
+// 对购物车内商品进行删除的操作
+void Delete_Buying(Buying *res,Node *head,double *sum) {
+
+}
+
+// 用来继续添加购物车
+void Add_Buying(Buying *res,Node *head, double *sum) {
+
+}
+
+
+
