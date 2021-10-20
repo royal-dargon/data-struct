@@ -20,6 +20,13 @@ struct Node {
     Node *next;
 };
 
+struct Buying {
+    string name;
+    string model;
+    double price;
+    Buying *next;
+};
+
 class User {
     private:
         char* name;
@@ -40,7 +47,7 @@ void Show_commodity(Node *head);
 // 通过这种方式在程序结束的时候向文件中写入本次链表的内容
 void Write_File(Node *head);
 // 购买者的函数，购买者通过查看链表的Id对商品进行购买
-void Buy_Things(Node *head);
+Buying* Buy_Things(Node *head,double *sum);
 
 int main()
 {
@@ -163,4 +170,42 @@ void Write_File(Node *head) {
         p = p->next;
     }
     outfile.close();
+}
+
+Buying* Buy_Things(Node *head,double *sum) {
+    int flag = 1;
+    int id;
+    Buying *res = new struct Buying;
+    Buying *pnew, *tail;
+    res->next = NULL;
+    tail = res;
+    cout << "--------购买界面-----------" << endl;
+    while(flag) {
+        cout << "请输入您要购买商品的ID: ";
+        cin >> id;
+        Node *p = head;
+        int flag1 = 1;
+        while(p != NULL && flag1 == 1) {
+            if(p->Id == id) {
+                if(p->number == 0) {
+                    cout << "the number of the thing is not enough!" << endl;
+                    break;
+                }
+                p->number = p->number - 1;
+                flag1 = 0;
+                pnew = new struct Buying;
+                pnew->name = p->name;
+                pnew->model = p->model;
+                pnew->price = p->price;
+                *sum = *sum + p->price;
+            }
+            p = p->next;
+        }
+        if(flag1 == 1) {
+            cout << "you put in wrong Id!"<<" please put in again!"<<endl;
+        }
+        cout << "do you want continue to buy : (1/0)";
+        cin >> flag;
+    }
+    return res;
 }
