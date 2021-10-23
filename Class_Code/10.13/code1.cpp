@@ -107,26 +107,32 @@ int main()
         //Show_commodity(head);
     }
     else if(role == 2) {
-        cout << "尊敬的顾客请输入您要进行的操作：1.查看商品 2.选购商品 3.查看购物车 4.修改购物车 5.结账(离开)" << endl;
-        int choice = 0;
-        Buying *res;
-        double sum = 0;
-        cin >> choice;
-        if(choice == 1) {
-            Show_commodity(head);
+        int flag1 = 1;
+        while (flag1)
+        {   
+            cout << "尊敬的顾客请输入您要进行的操作：1.查看商品 2.选购商品 3.查看购物车 4.修改购物车 5.结账(离开)" << endl;
+            int choice = 0;
+            Buying *res;
+            double sum = 0;
+            cin >> choice;
+            if(choice == 1) {
+                Show_commodity(head);
+            }
+            else if(choice == 2) {
+                Show_commodity(head);
+                res = Buy_Things(head,&sum);
+            }
+            else if(choice == 3) {
+                Look_Buying(res);
+            }
+            else if(choice == 4) {
+                Change_Buying(res,head,&sum);
+            } else {
+                Show_shopres(res,sum);
+                flag1 = 0;
+            }
         }
-        else if(choice == 2) {
-            Show_commodity(head);
-            res = Buy_Things(head,&sum);
-        }
-        else if(choice == 3) {
-            Look_Buying(res);
-        }
-        else if(choice == 4) {
-            Change_Buying(res,head,&sum);
-        } else {
-            Show_shopres(res,sum);
-        }
+        
     }
     Write_File(head);
     return 0;
