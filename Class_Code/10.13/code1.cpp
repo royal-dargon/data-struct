@@ -69,9 +69,12 @@ void Look_Buying(Buying *res);
 // 对购物车进行修改的操作
 void Change_Buying(Buying *res,Node *head,double *sum);
 // 对购物车内商品进行删除的操作
-void Delete_Buying(Buying *res,Node *head,double *sum);
+double Delete_Buying(Buying *res,Node *head,double sum);
 // 用来继续添加购物车
-void Add_Buying(Buying *res,Node *head, double *sum);
+double Add_Buying(Buying *res,Node *head, double sum);
+
+// 进货功能
+// 退货处理功能
 
 int main()
 {
@@ -108,12 +111,12 @@ int main()
     }
     else if(role == 2) {
         int flag1 = 1;
+        double sum = 0;
         while (flag1)
         {   
             cout << "尊敬的顾客请输入您要进行的操作：1.查看商品 2.选购商品 3.查看购物车 4.修改购物车 5.结账(离开)" << endl;
             int choice = 0;
             Buying *res;
-            double sum = 0;
             cin >> choice;
             if(choice == 1) {
                 Show_commodity(head);
@@ -121,6 +124,7 @@ int main()
             else if(choice == 2) {
                 Show_commodity(head);
                 res = Buy_Things(head,&sum);
+                //cout << sum << endl;
             }
             else if(choice == 3) {
                 Look_Buying(res);
@@ -128,6 +132,7 @@ int main()
             else if(choice == 4) {
                 Change_Buying(res,head,&sum);
             } else {
+                cout << sum << endl;
                 Show_shopres(res,sum);
                 flag1 = 0;
             }
@@ -308,7 +313,7 @@ void Show_shopres(Buying *head,double sum) {
         cout<<endl;
         p = p->next;
     }
-    cout << "the sum is "<<sum<<endl;
+    cout << "the sum is "<< sum <<endl;
 }
 
 
@@ -495,10 +500,12 @@ void Change_Buying(Buying *res,Node *head,double *sum) {
     int choice = 0;
     cin >> choice;
     if(choice == 1) {
-        Delete_Buying(res,head,sum);
+        double temp = *sum;
+        *sum = Delete_Buying(res,head,temp);
     }
     else if(choice == 2) {
-        Add_Buying(res,head,sum);
+        double temp = *sum;
+        *sum = Add_Buying(res,head,temp);
     } else {
         cout << "放弃修改购物车!" << endl;
     }
@@ -506,7 +513,7 @@ void Change_Buying(Buying *res,Node *head,double *sum) {
 }
 
 // 对购物车内商品进行删除的操作
-void Delete_Buying(Buying *res,Node *head,double *sum) {
+double Delete_Buying(Buying *res,Node *head,double sum) {
     cout << "-------------------现在是对购物车中的商品进行删除的界面---------------" << endl;
     Look_Buying(res);
     string dname;
@@ -533,7 +540,7 @@ void Delete_Buying(Buying *res,Node *head,double *sum) {
     }
     if(p == NULL) {
         cout << "您输入的商品的名称错误或者在本系统中是不存在的 ！" << endl;
-        return;
+        return sum;
     }
     cout << "您要删除的商品是 :" << p->name << endl;
     cout << "正在删除中------" << endl; 
@@ -566,16 +573,17 @@ void Delete_Buying(Buying *res,Node *head,double *sum) {
     }
     if(addNumber == NULL) {
         cout << "这个商品已经不存在在货架上了" << endl;
-        return;
+        return sum;
     }
     addNumber = addNumber + 1;
     cout << "已经成功放回到货架上 ！" << endl;
-    *sum = *sum - dprice;
+    sum = sum - dprice;
     cout << endl;
+    return sum;
 }
 
 // 用来继续添加购物车
-void Add_Buying(Buying *res,Node *head, double *sum) {
+double Add_Buying(Buying *res,Node *head, double sum) {
     cout << "---------------尊敬的客户您现在在继续选购商品--------------" << endl;
     Show_commodity(head);
     cout << "请输入您想要继续购买的商品的ID :" << endl;
@@ -592,11 +600,11 @@ void Add_Buying(Buying *res,Node *head, double *sum) {
     }
     if(p == NULL) {
         cout << "您输入的商品的Id不存在! " << endl;
-        return;
+        return sum;
     }
     if(p->number == 0) {
         cout << "您想要购买的商品已经没有货了！" << endl;
-        return;
+        return sum;
     }
     p->number = p->number - 1;
     cout << "现在正在讲您想要购买的商品添加到购物车中-------" << endl;
@@ -609,12 +617,13 @@ void Add_Buying(Buying *res,Node *head, double *sum) {
     pnew ->Id = p->Id;
     pnew->name = p->name;
     pnew->model = p->model;
-    pnew->price = pnew->price;
+    pnew->price = p->price;
     pnew->next = NULL;
     q->next = pnew;
-    *sum = *sum + p->price;
+    sum = sum + p->price;
     cout << "添加完成 -----" << endl;
     cout << endl;
+    return sum;
 }
 
 
