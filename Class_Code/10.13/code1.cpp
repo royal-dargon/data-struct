@@ -89,7 +89,7 @@ int main()
         // temp 用来描述管理员对下一步操作的选择
         int temp, flag = 1;
         while(flag) {
-            cout << "管理员，请输入您接下来想要进行的操作: 1.查询库房内的商品 2.添加商品 3.删除商品 4.修改信息 5.退出"<<endl;
+            cout << "管理员，请输入您接下来想要进行的操作: 1.查询库房内的商品 2.添加商品 3.删除商品 4.修改信息 5.进货 6.退出"<<endl;
             cin >> temp;
             if(temp == 1) {
                 Show_commodity(head);
@@ -102,6 +102,9 @@ int main()
             }
             else if(temp == 4) {
                 ChangeInfo(head);
+            } 
+            else if(temp==5){
+                addThings(head);
             } else {
                 cout << "辛苦了，管理员！" << endl;
                 flag = 0;
@@ -115,7 +118,7 @@ int main()
         double sum = 0;
         while (flag1)
         {   
-            cout << "尊敬的顾客请输入您要进行的操作：1.查看商品 2.选购商品 3.查看购物车 4.修改购物车 5.结账(离开)" << endl;
+            cout << "尊敬的顾客请输入您要进行的操作：1.查看商品 2.选购商品 3.查看购物车 4.修改购物车 5.结账(离开) 6.退还商品" << endl;
             int choice = 0;
             Buying *res;
             cin >> choice;
@@ -132,6 +135,9 @@ int main()
             }
             else if(choice == 4) {
                 Change_Buying(res,head,&sum);
+            }
+            else if(choice == 6) {
+                returnThings(head);
             } else {
                 cout << sum << endl;
                 Show_shopres(res,sum);
