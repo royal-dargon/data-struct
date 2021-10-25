@@ -72,9 +72,10 @@ void Change_Buying(Buying *res,Node *head,double *sum);
 double Delete_Buying(Buying *res,Node *head,double sum);
 // 用来继续添加购物车
 double Add_Buying(Buying *res,Node *head, double sum);
-
 // 进货功能
+void addThings(Node *head);
 // 退货处理功能
+void returnThings(Node *head);
 
 int main()
 {
@@ -626,5 +627,55 @@ double Add_Buying(Buying *res,Node *head, double sum) {
     return sum;
 }
 
+// 用来表示进货的函数
+void addThings(Node *head) {
+    cout << "---------------现在是进货界面-------------------" << endl;
+    Show_commodity(head);
+    cout << "请输入您要增加商品的Id ： " << endl;
+    int addId;
+    cin >> addId;
+    Node *p = head->next;
+    while(p != NULL) {
+        if(p->Id == addId) {
+            cout << "已经找到您需要添加的商品的id！" << endl;
+            break;
+        }
+        p = p->next;
+    }
+    if(p == NULL) {
+        cout << "很抱歉，您输入的ID在货架上是不存在的！" << endl;
+        return;
+    }
+    int addNum = 0;
+    cout << "请输入您需要增加的数量: ";
+    cin >> addNum;
+    cout << "您添加的数量是：" << addNum << endl;
+    p->number = p->number + addNum;
+    cout << "进货成功！" << endl;
+}
+
+// 用来给用户退款的服务
+void returnThings(Node *head) {
+    cout << "----------------------------尊敬的客户，现在是退货界面---------------------" << endl;
+    Show_commodity(head);
+    cout << "请输入您要退换商品的Id ： " << endl;
+    int addId;
+    cin >> addId;
+    Node *p = head->next;
+    while(p != NULL) {
+        if(p->Id == addId) {
+            cout << "已经找到您需要退还的商品的id！" << endl;
+            break;
+        }
+        p = p->next;
+    }
+    if(p == NULL) {
+        cout << "很抱歉，您输入的ID在货架上是不存在的！" << endl;
+        return;
+    }
+    p->number = p->number + 1;
+    cout << "已经退还成功！" << endl;
+    cout << "归还您的金额为：" << p->price << endl;
+}
 
 
