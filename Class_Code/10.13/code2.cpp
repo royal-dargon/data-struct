@@ -21,8 +21,50 @@ class Barber3List {
     public:
         Barber *front;
         Barber *rear;
-        Barber3List() {
-
+        int grade;
+        Barber3List(int grade) {
+            this->grade = grade;
+            front = new struct Barber;
+            rear = front;
+            front->next = NULL;
+        }
+        // 用来获得该等级的理发师队列的函数，实现方法是遍历传入的队列，然后寻找和该队列等级一样的理发师，最终传入
+        void getListByGrade(Barber *head) {
+            Barber *p,*pnew;
+            p = head->next;
+            while(p != NULL) {
+                if(p->grade == this->grade) {
+                    pnew = new struct Barber;
+                    pnew->name = p->name;
+                    pnew->grade = p->grade;
+                    pnew->revenue = p->revenue;
+                    pnew->next = NULL;
+                    rear->next = pnew;
+                    rear = pnew;
+                }
+                p = p->next;
+            }
+        }
+        // 用来展示这个级别的理发师的队列(管理员进行查看的)
+        void Show() {
+            Barber *p;
+            p = front->next;
+            while(p != NULL) {
+                cout << "理发师姓名：" << p->name << endl;
+                cout << "理发师等级：" << p->grade << endl;
+                cout << "理发师当前的收入：" << p->revenue << endl;
+                cout << "--------------------------" << endl;
+            }
+        }
+        void Show2Customer() {
+            Barber *p;
+            p = front->next;
+            while(p != NULL) {
+                cout << "理发师姓名：" << p->name << endl;
+                cout << "理发师等级：" << p->grade << endl;
+                //cout << "理发师当前的收入：" << p->revenue << endl;
+                cout << "--------------------------" << endl;
+            }
         }
 };
 
