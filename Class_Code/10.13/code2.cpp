@@ -16,6 +16,16 @@ struct Barber {
     Barber *next;
 };
 
+// 辅助创建对应三个级别的理发师队列
+class Barber3List {
+    public:
+        Barber *front;
+        Barber *rear;
+        Barber3List() {
+
+        }
+};
+
 // 用来初始化链表
 void Init_queue(Barber **front, Barber **rear);
 // 用来给管理员提供服务的函数，主要的作用是可以让管理员创建一个理发师的信息
