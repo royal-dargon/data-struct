@@ -56,6 +56,7 @@ class Barber3List {
                 cout << "--------------------------" << endl;
             }
         }
+        // 用来给顾客查看理发师队列的函数
         void Show2Customer() {
             Barber *p;
             p = front->next;
@@ -70,10 +71,14 @@ class Barber3List {
 
 // 用来初始化链表
 void Init_queue(Barber **front, Barber **rear);
+// 用来表示最后退出的时候向文件中写入的函数
+void End_queue(Barber *front);
 // 用来给管理员提供服务的函数，主要的作用是可以让管理员创建一个理发师的信息
 void barberCreate(Barber *front,Barber **rear);
 // 用来展示理发师的列表，注意这里是不区分理发师的等级的
 void showBarber(Barber *front, Barber *rear);
+// 用来提供给管理者来给理发师改变等级的函数,这里默认规定理发师的晋升不是立刻生效的
+void changeGrade(Barber *front,Barber *rear);
 
 
 int main() {
@@ -115,6 +120,24 @@ void Init_queue(Barber **front,Barber **rear) {
     //cout << front->next->name;
     infile.close();
     cout << "reading finished！" << endl;
+}
+
+// 用来向文件中写入今天的营业额的函数
+void End_queue(Barber *front) {
+    // the mode to wirte
+    ofstream outfile;
+    outfile.open("barber.txt");
+    cout << "write to the file" << endl;
+    Barber *p;
+    p = front->next;
+    while(p != NULL) {
+        outfile << p->name << endl;
+        outfile << p->grade << endl;
+        outfile << p->revenue << endl;
+        p = p->next;
+    }
+    outfile.close();
+    cout << "write to the file has finished" << endl;
 }
 
 // 展示全部理发师的函数，不区分等级
@@ -161,4 +184,32 @@ void barberCreate(Barber *front,Barber **rear) {
     }
     //cout << (*rear)->name << endl;
     cout << "尊敬的管理员您正在退出目前的操作" << endl;
+}
+
+void changeGrade(Barber *front,Barber *rear) {
+    cout << "----------------------尊敬的管理员，现在是给理发师改变等级的地方-------------------" << endl;
+    int changeGrade;
+    showBarber(front,rear);
+    cout << "请输入您想要修改的理发师的姓名：";
+    string name;
+    cin >> name;
+    cout << "正在修改的理发师的姓名是：" << name << endl;
+    Barber *p = front -> next;
+    while(p != NULL) {
+        if(p->name == name) {
+            cout << "已经找到了您要修改的理发师。"<< endl;
+            break;
+        }
+        p = p->next;
+    }
+    if(p == NULL) {
+        cout << "您输入的姓名在系统中是不存在的！" << endl;
+        return ;
+    }
+    cout << "该理发师的当前等级是：" << p->grade << endl;
+    changeGrade = p->grade;
+    cout << "请输入您想要修改为的等级：" ;
+    cin >> changeGrade;
+    p->grade = changeGrade;
+    cout << "已经修改完成！"<< endl;
 }
