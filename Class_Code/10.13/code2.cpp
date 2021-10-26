@@ -5,6 +5,8 @@
 #include <iostream>
 #include <string>
 #include <fstream>
+#include <ctime>
+#include <cstdlib>
 
 using namespace std;
 
@@ -65,7 +67,29 @@ class Barber3List {
                 cout << "理发师等级：" << p->grade << endl;
                 //cout << "理发师当前的收入：" << p->revenue << endl;
                 cout << "--------------------------" << endl;
+                p = p->next;
             }
+        }
+};
+class Customer {
+    public:
+        int durtime;
+        int intertime;
+        int select;
+        Customer() {
+            srand((int)time(0));
+            durtime = rand() % 100;
+            intertime = rand() % 100;
+            select = rand() % 3 + 1;
+        }
+        void changeGrade() {
+            cout << "请输入您想要更换为的等级：" ;
+            int grade = select;
+            cin >> grade;
+            select = grade;
+        }
+        int getSelect() {
+            return select;
         }
 };
 
@@ -79,8 +103,8 @@ void barberCreate(Barber *front,Barber **rear);
 void showBarber(Barber *front, Barber *rear);
 // 用来提供给管理者来给理发师改变等级的函数,这里默认规定理发师的晋升不是立刻生效的
 void changeGrade(Barber *front,Barber *rear);
-// 一个用来给顾客查看理发师列表的处理器
-//void chooseGrade();
+// 顾客来选择理发师的函数
+//void choseBarber();
 
 
 int main() {
@@ -98,19 +122,29 @@ int main() {
     cin >> role;
     if(role == 1) {
         cout << "尊敬的顾客，请选择您接下来想要进行的操作-------" << endl;
+        Customer user;
+        cout << "您当前的服务等级是：" << user.getSelect() << endl;
         while (1)
         {
-            cout << "1.查看理发师" << endl;
+            cout << "1.查看理发师 2.更换服务的等级" << endl;
             int choice = 1;
             cin >> choice;
             if(choice == 1) {
-                //chooseGrade();
                 cout << "尊敬的顾客请选择您想要查看的理发师的等级：" ;
                 int grade = 1;
                 cin >> grade;
                 if(grade == 1) {
-                Grade1.Show2Customer();
+                    Grade1.Show2Customer();
                 }
+                else if(grade == 2) {
+                    Grade2.Show2Customer();
+                } else {
+                    Grade3.Show2Customer();
+                }
+            } 
+            else if(choice == 2){
+                user.changeGrade();
+                cout << "您当前的服务等级是：" << user.select << endl;
             } else {
                 cout << "欢迎下次光临！" << endl;
                 break;
