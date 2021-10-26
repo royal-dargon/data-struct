@@ -79,16 +79,65 @@ void barberCreate(Barber *front,Barber **rear);
 void showBarber(Barber *front, Barber *rear);
 // 用来提供给管理者来给理发师改变等级的函数,这里默认规定理发师的晋升不是立刻生效的
 void changeGrade(Barber *front,Barber *rear);
+// 一个用来给顾客查看理发师列表的处理器
+//void chooseGrade();
 
 
 int main() {
     cout << "欢迎来到理发店管理系统！" << endl;
     Barber *front,*rear;
     Init_queue(&front,&rear);
-    //cout << rear->name << endl;
-    //showBarber(front,rear);
-    barberCreate(front,&rear);
-    showBarber(front,rear);
+    Barber3List Grade1(1);
+    Grade1.getListByGrade(front);
+    Barber3List Grade2(2);
+    Grade2.getListByGrade(front);
+    Barber3List Grade3(3);
+    Grade3.getListByGrade(front);
+    cout << "请输入您的身份：1.顾客 2.管理员" << endl;
+    int role = 1;
+    cin >> role;
+    if(role == 1) {
+        cout << "尊敬的顾客，请选择您接下来想要进行的操作-------" << endl;
+        while (1)
+        {
+            cout << "1.查看理发师" << endl;
+            int choice = 1;
+            cin >> choice;
+            if(choice == 1) {
+                //chooseGrade();
+                cout << "尊敬的顾客请选择您想要查看的理发师的等级：" ;
+                int grade = 1;
+                cin >> grade;
+                if(grade == 1) {
+                Grade1.Show2Customer();
+                }
+            } else {
+                cout << "欢迎下次光临！" << endl;
+                break;
+            }
+        }
+    } else {
+        cout << "尊敬的管理员，请选择您接下来想要进行的操作-----" << endl;
+        while (1)
+        {
+            cout << "1.查看理发师类别 2.修改理发师的等级 3.增加一个理发师 " << endl;
+            int choice = 1;
+            cin >> choice;
+            if(choice == 1) {
+                showBarber(front,rear);
+            } 
+            else if(choice == 2) {
+                changeGrade(front,rear);
+            }
+            else if(choice == 3) {
+                barberCreate(front,&rear);
+            } else {
+                cout << "辛苦了，管理员！" << endl;
+                break;
+            }
+        }
+    }
+    End_queue(front);
     return 0;
 }
 
