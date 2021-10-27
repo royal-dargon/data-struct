@@ -129,12 +129,15 @@ void showBarber(Barber *front, Barber *rear);
 void changeGrade(Barber *front,Barber *rear);
 // 用来表示开始服务的函数
 void startService(Barber3List &grade1,Barber3List &grade2,Barber3List &grade3,Customer &user,Barber *front);
+// 一个用来修复超市链表会在初始化出现错误的函数
+void fixList(Barber *head);
 
 
 int main() {
     cout << "欢迎来到理发店管理系统！" << endl;
     Barber *front,*rear;
     Init_queue(&front,&rear);
+    fixList(front);
     Barber3List Grade1(1);
     Grade1.getListByGrade(front);
     Barber3List Grade2(2);
@@ -364,4 +367,20 @@ void startService(Barber3List &grade1,Barber3List &grade2,Barber3List &grade3,Cu
     }
     p->revenue = p->revenue + (4-user.select) * user.durtime * 0.4;
     cout << "您本次需要付费 " << (4-user.select) * user.durtime * 0.4 << "元" << endl;
+}
+
+void fixList(Barber *head) {
+    if(head->next == NULL) {
+        cout << "目前理发师的列表为空！" << endl;
+        return;
+    }
+    Barber *p = head;
+    // 用来遍历到链表最后一个元素的前一个
+    while(p->next->next != NULL) {
+        p = p->next;
+    }
+    Barber *q;
+    q = p->next;
+    p->next = NULL;
+    delete q;
 }
