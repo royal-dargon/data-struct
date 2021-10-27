@@ -75,12 +75,21 @@ double Add_Buying(Buying *res,Node *head, double sum);
 // 进货功能
 void addThings(Node *head);
 // 退货处理功能
-void returnThings(Node *head);
+double returnThings(Node *head);
+// 用来向文件中写入当前总收入
+void writeSum(double sum);
+// 用来向文件中读出当前的总收入的函数
+double getSum(double sum);
+// 一个用来修复超市链表会在初始化出现错误的函数
+void fixList(Node *head);
 
 int main()
 {
     cout << "--------------欢迎来到超市管理系统---------------" << endl;
+    cout << "下面开始初始化程序---------" << endl;
     Node *head = Creat();
+    double allSum = 0;
+    allSum = getSum(allSum);
     // 用来识别身份的值
     int role;
     cout << "请输入您的身份: 1.超市管理员  2.购物者" << endl;
@@ -89,7 +98,7 @@ int main()
         // temp 用来描述管理员对下一步操作的选择
         int temp, flag = 1;
         while(flag) {
-            cout << "管理员，请输入您接下来想要进行的操作: 1.查询库房内的商品 2.添加商品 3.删除商品 4.修改信息 5.进货 6.退出"<<endl;
+            cout << "管理员，请输入您接下来想要进行的操作: 1.查询库房内的商品 2.添加商品 3.删除商品 4.修改信息 5.进货 6.查看当前的总收入 7.退出"<<endl;
             cin >> temp;
             if(temp == 1) {
                 Show_commodity(head);
@@ -105,6 +114,9 @@ int main()
             } 
             else if(temp==5){
                 addThings(head);
+            } 
+            else if(temp == 6) {
+                cout << "目前超市的总收入为 " << allSum << endl;
             } else {
                 cout << "辛苦了，管理员！" << endl;
                 flag = 0;
@@ -137,16 +149,19 @@ int main()
                 Change_Buying(res,head,&sum);
             }
             else if(choice == 6) {
-                returnThings(head);
+                double temp2 = returnThings(head);
+                allSum = allSum - temp2;
             } else {
                 cout << sum << endl;
                 Show_shopres(res,sum);
+                allSum = allSum + sum;
                 flag1 = 0;
             }
         }
         
     }
     Write_File(head);
+    writeSum(allSum);
     return 0;
 }
 
@@ -185,6 +200,8 @@ Node* Creat() {
         tail = pnew;
     }
     infile.close();
+    // 这里解决文件读写存在的小问题选择的处理方式是自动删除链表的最后一个元素
+    fixList(head);
     return head;
 }
 
@@ -661,7 +678,7 @@ void addThings(Node *head) {
 }
 
 // 用来给用户退款的服务
-void returnThings(Node *head) {
+double returnThings(Node *head) {
     cout << "----------------------------尊敬的客户，现在是退货界面---------------------" << endl;
     Show_commodity(head);
     cout << "请输入您要退换商品的Id ： " << endl;
@@ -677,11 +694,45 @@ void returnThings(Node *head) {
     }
     if(p == NULL) {
         cout << "很抱歉，您输入的ID在货架上是不存在的！" << endl;
-        return;
+        return 0;
     }
     p->number = p->number + 1;
     cout << "已经退还成功！" << endl;
     cout << "归还您的金额为：" << p->price << endl;
+    return p->price;
 }
 
+// 用来向文件中写入当前商店的总收入的函数
+void writeSum(double sum) {
+    ofstream outfile;
+    outfile.open("sum.txt");
+    cout << "write the sum to the file! " << endl;
+    outfile << sum << endl;
+    outfile.close();
+}
 
+// 用来从文件中读出当前超市的总收入的函数
+double getSum(double sum) {
+    cout << "正在从文件中读出目前超市的总收入！" << endl;
+    ifstream infile;
+    infile.open("sum.txt");
+    infile >> sum;
+    return sum;
+}
+
+// 一个用来修复初始化链表出现错误的函数
+void fixList(Node *head) {
+    if(head->next == NULL) {
+        cout << "目前商品的列表为空！" << endl;
+        return;
+    }
+    Node *p = head;
+    // 用来遍历到链表最后一个元素的前一个
+    while(p->next->next != NULL) {
+        p = p->next;
+    }
+    Node *q;
+    q = p->next;
+    p->next = NULL;
+    delete q;
+}

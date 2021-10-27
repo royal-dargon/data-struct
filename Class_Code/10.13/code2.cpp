@@ -79,6 +79,14 @@ class Barber3List {
         }
         // 如果这条队列不为空就把排在最前面的理发师取出，用来给顾客提供服务
         string giveService() {
+            if(front->next->next == NULL) {
+                Barber *q;
+                q = front->next;
+                front = rear;
+                string name = q->name;
+                delete q;
+                return name;
+            }
             Barber *temp = front->next->next;
             Barber *q = front->next;
             front->next = temp;
@@ -142,7 +150,7 @@ int main() {
         cout << "您当前的服务等级是：" << user.getSelect() << endl;
         while (1)
         {
-            cout << "1.查看理发师 2.更换服务的等级 3.选择服务" << endl;
+            cout << "1.查看理发师 2.更换服务的等级 3.选择服务 4.退出" << endl;
             int choice = 1;
             cin >> choice;
             if(choice == 1) {
@@ -173,7 +181,7 @@ int main() {
         cout << "尊敬的管理员，请选择您接下来想要进行的操作-----" << endl;
         while (1)
         {
-            cout << "1.查看理发师类别 2.修改理发师的等级 3.增加一个理发师 " << endl;
+            cout << "1.查看理发师类别 2.修改理发师的等级 3.增加一个理发师 4.退出" << endl;
             int choice = 1;
             cin >> choice;
             if(choice == 1) {
@@ -321,7 +329,7 @@ void startService(Barber3List &grade1,Barber3List &grade2,Barber3List &grade3,Cu
     string name;
     Barber *p = front->next;
     if(user.select == 1) {
-        if(grade1.isEmpty() == true) {
+        if(grade1.isEmpty() == 1) {
             cout << "即将开始服务！" << endl;
             name = grade1.giveService();
         } else {
@@ -329,14 +337,14 @@ void startService(Barber3List &grade1,Barber3List &grade2,Barber3List &grade3,Cu
         }
     } 
     else if(user.select == 2) {
-        if(grade2.isEmpty() == true) {
+        if(grade2.isEmpty() == 1) {
             cout << "即将开始服务！" << endl;
             name = grade2.giveService();
         } else {
             cout << "该等级的理发师都在工作中！" << endl;
         }
     } else {
-        if(grade3.isEmpty() == true) {
+        if(grade3.isEmpty() == 1) {
             cout << "即将开始服务！" << endl;
             name = grade3.giveService();
         } else {
