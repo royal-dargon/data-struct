@@ -45,6 +45,7 @@ class User {
 Node* Creat();
 // 这种方法用于每次的手动添加
 void CreatByUser(Node* head);
+// 用来展示链表中的商品的函数
 void Show_commodity(Node *head);
 // 通过这种方式在程序结束的时候向文件中写入本次链表的内容
 void Write_File(Node *head);
@@ -719,6 +720,7 @@ double getSum(double sum) {
     infile >> sum;
     return sum;
 }
+
 
 // 一个用来修复初始化链表出现错误的函数
 void fixList(Node *head) {
