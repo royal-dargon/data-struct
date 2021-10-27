@@ -70,6 +70,22 @@ class Barber3List {
                 p = p->next;
             }
         }
+        // 用来查看这条队列是否为空的函数
+        bool isEmpty() {
+            if(front == rear) {
+                return false;
+            }
+            return true;
+        }
+        // 如果这条队列不为空就把排在最前面的理发师取出，用来给顾客提供服务
+        string giveService() {
+            Barber *temp = front->next->next;
+            Barber *q = front->next;
+            front->next = temp;
+            string name = q->name;
+            delete q;
+            return name;
+        }
 };
 class Customer {
     public:
@@ -103,8 +119,8 @@ void barberCreate(Barber *front,Barber **rear);
 void showBarber(Barber *front, Barber *rear);
 // 用来提供给管理者来给理发师改变等级的函数,这里默认规定理发师的晋升不是立刻生效的
 void changeGrade(Barber *front,Barber *rear);
-// 顾客来选择理发师的函数
-//void choseBarber();
+// 用来表示开始服务的函数
+void startService(Barber3List &grade1,Barber3List &grade2,Barber3List &grade3,Customer &user,Barber *front);
 
 
 int main() {
@@ -126,7 +142,7 @@ int main() {
         cout << "您当前的服务等级是：" << user.getSelect() << endl;
         while (1)
         {
-            cout << "1.查看理发师 2.更换服务的等级" << endl;
+            cout << "1.查看理发师 2.更换服务的等级 3.选择服务" << endl;
             int choice = 1;
             cin >> choice;
             if(choice == 1) {
@@ -145,6 +161,9 @@ int main() {
             else if(choice == 2){
                 user.changeGrade();
                 cout << "您当前的服务等级是：" << user.select << endl;
+            } 
+            else if(choice == 3) {
+                startService(Grade1,Grade2,Grade3,user,front);
             } else {
                 cout << "欢迎下次光临！" << endl;
                 break;
@@ -295,4 +314,46 @@ void changeGrade(Barber *front,Barber *rear) {
     cin >> changeGrade;
     p->grade = changeGrade;
     cout << "已经修改完成！"<< endl;
+}
+
+void startService(Barber3List &grade1,Barber3List &grade2,Barber3List &grade3,Customer &user,Barber *front) {
+    cout << "现在正在为您预约理发师>>>" << endl;
+    string name;
+    Barber *p = front->next;
+    if(user.select == 1) {
+        if(grade1.isEmpty() == true) {
+            cout << "即将开始服务！" << endl;
+            name = grade1.giveService();
+        } else {
+            cout << "该等级的理发师都在工作中！" << endl;
+        }
+    } 
+    else if(user.select == 2) {
+        if(grade2.isEmpty() == true) {
+            cout << "即将开始服务！" << endl;
+            name = grade2.giveService();
+        } else {
+            cout << "该等级的理发师都在工作中！" << endl;
+        }
+    } else {
+        if(grade3.isEmpty() == true) {
+            cout << "即将开始服务！" << endl;
+            name = grade3.giveService();
+        } else {
+            cout << "该等级的理发师都在工作中！" << endl;
+        }
+    }
+    while(p != NULL) {
+        if(p->name == name) {
+            cout << "已经在系统中找到这个理发师！" << endl;
+            break;
+        }
+        p = p -> next;
+    }
+    if(p == NULL) {
+        cout << "没有在系统中找到这个理发师！" << endl;
+        return;
+    }
+    p->revenue = p->revenue + (4-user.select) * user.durtime * 0.4;
+    cout << "您本次需要付费 " << (4-user.select) * user.durtime * 0.4 << "元" << endl;
 }
