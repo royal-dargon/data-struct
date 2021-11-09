@@ -60,12 +60,21 @@ class Stack {
             for(i = 0;i <= tos;i ++) {
                 cout << sta[i] << ".";
             }
+            cout << endl;
+        }
+        void Traver2() {
+            int i;
+            for(i = tos;i > 0;i --) {
+                cout << sta[i] << ".";
+            }
+            cout << sta[0] << endl;
         }
 };
 
 class CSTree {
     private:
         CSNode *root;
+        Stack myStack;
     public:
         // 初始化一棵孩子兄弟树
         CSTree() {
@@ -120,7 +129,6 @@ class CSTree {
         }
         // 输出所有从根结点到叶子结点的路径
         void OutPath1(CSNode *Node) {
-            Stack myStack;
             while(Node) {
                 myStack.Push(Node->elem);
                 if(Node->firstChild == NULL) {
@@ -133,8 +141,17 @@ class CSTree {
             }
         }
         // 输出所有从叶子结点到根结点的路径
-        void OutPath2() {
-
+        void OutPath2(CSNode *Node) {
+            while(Node) {
+                myStack.Push(Node->elem);
+                if(Node->firstChild == NULL && Node->elem == "www") {
+                    myStack.Traver2();
+                } else {
+                    OutPath2(Node->firstChild);
+                }
+                myStack.Pop();
+                Node = Node ->nextSibling;
+            }
         }
 };
 
@@ -143,6 +160,6 @@ int main() {
     myTree.CreatTree();
     CSNode *root = myTree.getRoot();
     //myTree.PreShow(root);
-    myTree.OutPath1(root->firstChild);
+    myTree.OutPath2(root->firstChild);
     return 0;
 }

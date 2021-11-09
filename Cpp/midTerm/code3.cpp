@@ -27,6 +27,8 @@ class Stack {
                 cout << "the stack is empty!" << endl;
                 return ' ';
             }
+            //char res = stckarry[tos];
+            //tos --;
             return stckarry[tos--];
         }
         char min() {
