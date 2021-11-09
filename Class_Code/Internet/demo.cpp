@@ -37,6 +37,32 @@ class Queue {
         }
 };
 
+// 用来辅助遍历的栈的结构
+class Stack {
+    private:
+        string sta[100];
+        int tos;
+    public:
+        Stack() {
+            tos = -1;
+        }
+        void Push(string value) {
+            tos ++;
+            sta[tos] = value;
+        }
+        string Pop() {
+            string res = sta[tos];
+            tos --;
+            return res;
+        }
+        void Traver() {
+            int i;
+            for(i = 0;i <= tos;i ++) {
+                cout << sta[i] << ".";
+            }
+        }
+};
+
 class CSTree {
     private:
         CSNode *root;
@@ -49,6 +75,7 @@ class CSTree {
         }
         // 下面是如何创建一个孩子兄弟链表树的结点的操作
         // 根据先到先建的原则，我们采取了队列的方式进行辅助创建
+        // 值得注意的是这种建立方式是必须采用按层次建立的方式进行构建
         void CreatTree() {
             string fa,ch;
             CSNode *r = root;
@@ -62,7 +89,7 @@ class CSTree {
                 myQueue.Push(pnew);
                 if(fa == "#") {
                     root->firstChild = pnew;
-                    r = pnew;
+                    //r = pnew;
                 } else {
                     CSNode *temp = myQueue.Pop();
                     while(temp->elem != fa) {
@@ -91,12 +118,31 @@ class CSTree {
         CSNode* getRoot() {
             return root;
         }
+        // 输出所有从根结点到叶子结点的路径
+        void OutPath1(CSNode *Node) {
+            Stack myStack;
+            while(Node) {
+                myStack.Push(Node->elem);
+                if(Node->firstChild == NULL) {
+                    myStack.Traver();
+                } else {
+                    OutPath1(Node->firstChild);
+                }
+                myStack.Pop();
+                Node = Node ->nextSibling;
+            }
+        }
+        // 输出所有从叶子结点到根结点的路径
+        void OutPath2() {
+
+        }
 };
 
 int main() {
     CSTree myTree;
     myTree.CreatTree();
     CSNode *root = myTree.getRoot();
-    myTree.PreShow(root);
+    //myTree.PreShow(root);
+    myTree.OutPath1(root->firstChild);
     return 0;
 }
