@@ -77,6 +77,7 @@ class ClockWithDate:public Clock,public Date {
 int main() {
     string str = "2002年4月13日";
     ClockWithDate tmp(10,22,35,str);
+    tmp.Show();
     tmp.AddSecond();
     tmp.Show();
 }

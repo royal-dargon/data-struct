@@ -63,7 +63,7 @@ class Stu_Tech:public Student,public Teacher {
 };
 
 int main() {
-    string name = "汤先宁";
+    string name = "张三";
     string sex = "男";
     string Id = "320902200204130002";
     string birthday = "2002年4月13日";
