@@ -6,6 +6,34 @@
 using namespace std;
 
 
+// 用作广度优先搜索的辅助队列
+class List {
+    private:
+        int temp[100];
+        int rear,front;
+    public:
+        List() {
+            memset(temp,0,sizeof(int)*100);
+            rear = 0;
+            front = 0;
+        }
+        bool Isempty() {
+            if(rear == front) {
+                return true;
+            }
+            return false;
+        }
+        void Push(int e) {
+            temp[rear] = e;
+            rear ++;
+        }
+        int Pop() {
+            int res = temp[front];
+            front ++;
+            return res;
+        }
+};
+
 // 这个主要是对图的邻接矩阵存储的尝试
 const int MaxSize = 20;
 // 存放节点信息的结构体，Id是用来存放节点在存储的数组内的下标
@@ -108,6 +136,33 @@ class Graph {
                 }
             }
         }
+        // 对图进行BFS遍历的算法的实践
+        void BFSTraver() {
+            int i;
+            for(i = 0;i < venum;i ++) {
+                visit[i] = false;
+            }
+            // 开始初始化队列
+            List myList;
+            for(i = 0;i < venum;i ++) {
+                if(!visit[i]) {
+                    visit[i] = true;
+                    VisitFunc(i);
+                    myList.Push(i);
+                    while(!myList.Isempty()) {
+                        int tmp = myList.Pop();
+                        Node *p;
+                        for(p = arr[tmp].first->next;p != NULL;p = p->next) {
+                            if(!visit[p->Id-1]) {
+                                visit[p->Id-1] = true;
+                                VisitFunc(p->Id-1);
+                                myList.Push(p->Id-1);
+                            }
+                        }
+                    }
+                }
+            }
+        }
 };
 
 int main() {
@@ -115,5 +170,7 @@ int main() {
     temp.Graph_Init();
     //temp.InitVisit();
     temp.DFSTraver();
+    cout << endl;
+    temp.BFSTraver();
     return 0;
 }
