@@ -8,18 +8,22 @@ struct maze {
     int **Pic;
 };
 
+struct point {
+    int x,y;
+};
+
 // 创建一个我的队列的类对接下来的一系列操作进行辅助
 class myQueue { 
     private:
-        int elem[];
+        point elem[];
         int front, frear;
     public:
         myQueue() {
-            elem = new int[500];
+            elem = new point[500];
             front = frear = 1;
         }
         // 入队列的操作
-        void Push(int e) {
+        void Push(point e) {
             elem[front] = e;
             front ++;
         }
@@ -27,6 +31,13 @@ class myQueue {
         int Pop() {
             int res = elem[frear++];
             return res;
+        }
+        // 检测队列是否为空的函数
+        bool IsEmpty() {
+            if(front == frear) {
+                return true;
+            }
+            return false;
         }
 };
 

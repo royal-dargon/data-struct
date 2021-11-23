@@ -33,10 +33,15 @@ maze creatMaze() {
 bool IsSuccess(maze temp) {
     bool visit[temp.Row][temp.Col];
     int i,j;
+    myQueue queues;
     for(i = 0;i < temp.Row;i ++) {
         for(j = 0;j < temp.Col;j ++) {
             visit[i][j] = false;
         }
     }
+    point e;
+    e.x = 0;
+    e.y = 0;
+    queues.Push(e);
     return true;
 }
