@@ -6,14 +6,17 @@
 
 using namespace std;
 
+int dx[4] = {0,0,1,-1};
+int dy[4] = {-1,1,0,0};
+
 // 初始化迷宫的的内容
 maze creatMaze() {
     srand((int)time(0));
     maze temp;
     int i,j;
-    temp.Col = rand() % 20;
-    if(temp.Col < 10) {
-        temp.Col += 10;
+    temp.Col = rand() % 8;
+    if(temp.Col < 4) {
+        temp.Col += 4;
     }
     temp.Row = temp.Col;
     temp.Pic = new int*[temp.Row];
@@ -30,18 +33,48 @@ maze creatMaze() {
     return temp;
 }
 
+// 判断是否有通路的函数
 bool IsSuccess(maze temp) {
-    bool visit[temp.Row][temp.Col];
+    int visit[temp.Row][temp.Col];
     int i,j;
+    int k;
     myQueue queues;
     for(i = 0;i < temp.Row;i ++) {
         for(j = 0;j < temp.Col;j ++) {
-            visit[i][j] = false;
+            visit[i][j] = 0;
         }
     }
     point e;
     e.x = 0;
     e.y = 0;
+    e.depth = 0;
     queues.Push(e);
-    return true;
+    bool found = false;
+    while(!found && !queues.IsEmpty()) {
+        point p = queues.Pop();
+        // 用来操作上下左右的四个方向
+        if(p.x == temp.Col - 1 && p.y == temp.Row - 1) {
+            return true;
+        }
+        for(k = 0;k < 4;k ++) {
+            int nx = p.x + dx[k];
+            int ny = p.y + dy[k];
+            if(nx < 0 || nx > temp.Col - 1 || ny < 0 || ny > temp.Row) {
+                continue;
+            }
+            // 已经访问过了
+            if(visit[nx][ny]) {
+                continue;
+            }
+            // 遇到墙了
+            if(temp.Pic[nx][ny] == 1) {
+                continue;
+            }
+            visit[nx][ny] = 1;
+            point n = {nx,ny,p.depth+1};
+            queues.Push(n);
+        }
+        queues.Del();
+    }
+    return false;
 }

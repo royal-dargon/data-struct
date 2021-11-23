@@ -10,16 +10,17 @@ struct maze {
 
 struct point {
     int x,y;
+    int depth;
 };
 
 // 创建一个我的队列的类对接下来的一系列操作进行辅助
 class myQueue { 
     private:
-        point elem[];
+        struct point *elem;
         int front, frear;
     public:
         myQueue() {
-            elem = new point[500];
+            elem = new struct point[500];
             front = frear = 1;
         }
         // 入队列的操作
@@ -28,9 +29,13 @@ class myQueue {
             front ++;
         }
         // 出队列的操作
-        int Pop() {
-            int res = elem[frear++];
+        point Pop() {
+            point res = elem[frear];
             return res;
+        }
+        // 实现出队列的操作，用于在对队列的首个元素进行销毁的操作
+        void Del() {
+            frear ++;
         }
         // 检测队列是否为空的函数
         bool IsEmpty() {

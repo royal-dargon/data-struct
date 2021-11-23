@@ -6,7 +6,14 @@ using namespace std;
 
 int main() {
     maze temp;
+    int count = 1;
     temp = creatMaze();
+    while (!IsSuccess(temp))
+    {
+        count ++;
+        temp = creatMaze();
+        //cout << count << " ";
+    }
     int i,j;
     for(i = 0;i < temp.Row;i ++){
         for(j = 0;j < temp.Col;j ++) {
@@ -19,5 +26,7 @@ int main() {
         }
         cout << endl;
     }
+    cout << temp.Col << endl;
+    cout << "创建了" << count << "次" << endl;
     return 0;
 }
