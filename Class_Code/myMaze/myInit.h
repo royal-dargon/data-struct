@@ -11,11 +11,13 @@ struct maze {
 struct point {
     int x,y;
     int depth;
+    // 用来记录这个点是来自于哪一个地方的指针
+    int pre;
 };
 
 // 创建一个我的队列的类对接下来的一系列操作进行辅助
 class myQueue { 
-    private:
+    public:
         struct point *elem;
         int front, frear;
     public:
@@ -44,8 +46,34 @@ class myQueue {
             }
             return false;
         }
+        // point* Get() {
+        //     return elem[frear].pre;
+        // }
+        // 获取当前队列头元素的下标
+        int Get() {
+            return frear;
+        }
 };
+
+// class myStack {
+//     private:
+//         int tos;
+//         point *elem;
+//     public:
+//         myStack() {
+//             tos = -1;
+//             elem = new  struct point[200];
+//         }
+//         void Push(point e) {
+//             elem[++tos] = e;
+//         }
+//         point Pop() {
+//             point res = elem[tos];
+//             tos --;
+//             return res;
+//         }
+// };
 
 maze creatMaze();
 // 用来判断这个迷宫是否可以走的函数，如果这个迷宫是可以走的那么就可以返回一个true
-bool IsSuccess(maze temp);
+bool IsSuccess(maze *temp);

@@ -8,7 +8,7 @@ int main() {
     maze temp;
     int count = 1;
     temp = creatMaze();
-    while (!IsSuccess(temp))
+    while (!IsSuccess(&temp))
     {
         count ++;
         temp = creatMaze();
