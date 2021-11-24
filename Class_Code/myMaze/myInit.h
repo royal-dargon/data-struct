@@ -20,7 +20,7 @@ class myQueue {
         int front, frear;
     public:
         myQueue() {
-            elem = new struct point[500];
+            elem = new struct point[1000];
             front = frear = 1;
         }
         // 入队列的操作

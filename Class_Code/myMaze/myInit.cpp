@@ -6,6 +6,7 @@
 
 using namespace std;
 
+// 对应了四个操作，分别是上下左右
 int dx[4] = {0,0,1,-1};
 int dy[4] = {-1,1,0,0};
 
@@ -14,9 +15,9 @@ maze creatMaze() {
     srand((int)time(0));
     maze temp;
     int i,j;
-    temp.Col = rand() % 8;
-    if(temp.Col < 4) {
-        temp.Col += 4;
+    temp.Col = rand() % 15;
+    if(temp.Col < 7) {
+        temp.Col += 7;
     }
     temp.Row = temp.Col;
     temp.Pic = new int*[temp.Row];
@@ -54,16 +55,17 @@ bool IsSuccess(maze temp) {
         point p = queues.Pop();
         // 用来操作上下左右的四个方向
         if(p.x == temp.Col - 1 && p.y == temp.Row - 1) {
+            found = true;
             return true;
         }
         for(k = 0;k < 4;k ++) {
             int nx = p.x + dx[k];
             int ny = p.y + dy[k];
-            if(nx < 0 || nx > temp.Col - 1 || ny < 0 || ny > temp.Row) {
+            if(nx < 0 || nx > temp.Col - 1 || ny < 0 || ny > temp.Row - 1) {
                 continue;
             }
             // 已经访问过了
-            if(visit[nx][ny]) {
+            if(visit[nx][ny] == 1) {
                 continue;
             }
             // 遇到墙了
@@ -76,5 +78,6 @@ bool IsSuccess(maze temp) {
         }
         queues.Del();
     }
+    // 用来输出路径的函数
     return false;
 }
