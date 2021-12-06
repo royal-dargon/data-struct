@@ -19,6 +19,30 @@ struct Node {
     MainNode *head;
 };
 
+// 创建一个起到辅助作用的队列
+class List {
+    private:    
+        string name[20];
+        int frear,front;
+    public:
+        List() {
+            frear = front = 0;
+        }
+        // 实现入队列的操作
+        void Push(string name) {
+            name[front] = name;
+            front ++;
+        }
+        // 实现出队列的操作，注意只是返回值但是不把这个值给去掉
+        string Top() {
+            return name[frear];
+        }
+        // 实现消除队头的元素的操作
+        void Pop() {
+            frear ++;
+        }
+};
+
 
 class ListDG {
     private:
@@ -50,7 +74,8 @@ class ListDG {
             while(infile.good() && infile.peek() != EOF) {
                 infile >> name;
                 arr[i].Name = name;
-                arr[i].head = NULL;
+                arr[i].head = new struct MainNode;
+                arr[i].head->next = NULL;
                 i ++;
             }
             infile.close();
@@ -80,15 +105,15 @@ class ListDG {
                         i ++;
                     }
                 }
-                cout << i;
                 // 当找到父课程的位置后，就开始把这个课程插在父课程的最前面
                 pnew = new struct MainNode;
                 //cout << "1";
                 pnew->className = cname;
                 //cout << cname;
                 pnew->next = arr[i].head->next;
-                cout << i;
+                //cout << i;
                 arr[i].head->next = pnew;
+                //cout << arr[i].head->next->className;
             }
             infile.close();
         }
@@ -96,6 +121,8 @@ class ListDG {
         void Show();
         // 用于测试时展示与指定一门课程相关课程的函数
         void TestShow();
+        // 拓扑排序
+        int topologicalSort();
 };
 
 int main() {
@@ -124,4 +151,52 @@ void ListDG::TestShow() {
         }
         cout << endl;
     }
+}
+
+// 拓扑排序
+// 构造一个队列Q(queue)和拓扑排序的结果队列T
+// 把所有没有依赖顶点的节点放入Q
+// 当Q还有顶点的时候，执行下面步骤
+// 从Q中取出一个顶点，将这个顶点从Q中删除，并且将它加到结果队列中
+// 去掉与他相关的每一条边
+// 如果m没有依赖的顶点，那么就把m放入Q中
+void ListDG::topologicalSort() {
+    List myList;
+    List res;
+    // 创建一个辅助判断是否存在依赖的bool类型的数组
+    bool *visit = new bool[num];
+    int i;
+    // 循环将每个值变为false
+    for(i = 0;i < num;i ++) {
+        visit[i] = false;
+    }
+    // 第一遍遍历一遍所有的值，找到遍历结束都是false的值那便是没有依赖的值
+    for(i = 0;i < num;i ++) {
+        MainNode *p = arr[i].head->next;
+        while(p) {
+            // 搜索
+            int j = 0;
+            while(1) {
+                if(arr[j].Name == p->className) {
+                    visit[j] = true;
+                    break;
+                }
+                j ++;
+                if(j == num) {
+                    break;
+                }
+            }
+            p = p -> next;
+        }
+    }
+    i = 0;
+    // 找到存在false
+    while(1) {
+        if(visit[i] == false) {
+            break;
+        }
+        i ++;
+    }
+    // 将存在的false对应的元素给放入到队列中
+    myList.Push(arr[i].Name);
 }
