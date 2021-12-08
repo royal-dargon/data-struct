@@ -2,6 +2,7 @@
 #include <iostream>
 #include <string>
 #include <fstream>
+#include <string.h>
 
 using namespace std;
 
@@ -9,6 +10,8 @@ using namespace std;
 
 // 用来记录每个节点的信息
 struct MainNode {
+    // 这里的id主要是为了存放每个节点的id
+    int id;
     string className;
     MainNode *next;
 };
@@ -22,24 +25,32 @@ struct Node {
 // 创建一个起到辅助作用的队列
 class List {
     private:    
-        string name[20];
+        int Tid[20];
         int frear,front;
     public:
         List() {
             frear = front = 0;
         }
         // 实现入队列的操作
-        void Push(string name) {
-            name[front] = name;
+        void Push(int id) {
+            Tid[front] = id;
             front ++;
         }
         // 实现出队列的操作，注意只是返回值但是不把这个值给去掉
-        string Top() {
-            return name[frear];
+        int Top() {
+            return Tid[frear];
         }
         // 实现消除队头的元素的操作
         void Pop() {
             frear ++;
+        }
+        // 判断队列是否为空的操作
+        bool IsEmpty() {
+            if(front == frear) {
+                return true;
+            } else {
+                return false;
+            }
         }
 };
 
@@ -105,10 +116,23 @@ class ListDG {
                         i ++;
                     }
                 }
+                int j = 0;
+                while(1) {
+                    if(j == num) {
+                        cout << "在寻找后继课程时出现了问题！" << endl;
+                        return;
+                    }
+                    if(arr[j].Name == cname) {
+                        break;
+                    } else {
+                        j ++;
+                    }
+                }
                 // 当找到父课程的位置后，就开始把这个课程插在父课程的最前面
                 pnew = new struct MainNode;
                 //cout << "1";
                 pnew->className = cname;
+                pnew->id = j;
                 //cout << cname;
                 pnew->next = arr[i].head->next;
                 //cout << i;
@@ -122,13 +146,14 @@ class ListDG {
         // 用于测试时展示与指定一门课程相关课程的函数
         void TestShow();
         // 拓扑排序
-        int topologicalSort();
+        void topologicalSort();
 };
 
 int main() {
     ListDG temp;
     temp.Show();
     temp.TestShow();
+    temp.topologicalSort();
     return 0;
 }
 
@@ -140,13 +165,13 @@ void ListDG::Show() {
     }
 }
 
-// 用于测试时展示与指定一门课程相关课程的函数
+//用于测试时展示与指定一门课程相关课程的函数
 void ListDG::TestShow() {
     int i;
     for(i = 0;i < num;i ++) {
         MainNode *p = arr[i].head->next;
         while(p) {
-            cout << p->className << " ";
+            cout << p->className << p->id << " ";
             p = p -> next;
         }
         cout << endl;
@@ -162,41 +187,52 @@ void ListDG::TestShow() {
 // 如果m没有依赖的顶点，那么就把m放入Q中
 void ListDG::topologicalSort() {
     List myList;
-    List res;
-    // 创建一个辅助判断是否存在依赖的bool类型的数组
-    bool *visit = new bool[num];
+    // 记录结果的数组
+    int res[num];
+    int count = 0;
+    // 创建一个可以计算每个节点入度的数组
+    int  visit[num];
+    MainNode *temp;
+    memset(visit,0,sizeof(int)*num);
+    memset(res,0,sizeof(int)*num);
     int i;
-    // 循环将每个值变为false
-    for(i = 0;i < num;i ++) {
-        visit[i] = false;
-    }
-    // 第一遍遍历一遍所有的值，找到遍历结束都是false的值那便是没有依赖的值
+    // 第一遍遍历一遍所有的值，记录每个节点的入度
     for(i = 0;i < num;i ++) {
         MainNode *p = arr[i].head->next;
         while(p) {
-            // 搜索
-            int j = 0;
-            while(1) {
-                if(arr[j].Name == p->className) {
-                    visit[j] = true;
-                    break;
-                }
-                j ++;
-                if(j == num) {
-                    break;
-                }
-            }
+            visit[p->id] ++;
             p = p -> next;
         }
     }
     i = 0;
-    // 找到存在false
+    // 把所有入度为0的节点放进队列
     while(1) {
-        if(visit[i] == false) {
-            break;
+        if(visit[i] == 0) {
+            myList.Push(i);
         }
         i ++;
+        if(i == num) {
+            break;
+        }
     }
-    // 将存在的false对应的元素给放入到队列中
-    myList.Push(arr[i].Name);
+    // 开始出对列
+    // 如果存储入度为0的队列为空则退出
+    while(!myList.IsEmpty()) {
+        int j = myList.Top();
+        res[count++] = j;
+        temp = arr[j].head->next;
+        while (temp)
+        {
+            visit[temp->id] --;
+            if(visit[temp->id] == 0) {
+                myList.Push(temp->id);
+            }
+            temp = temp->next; 
+        }
+        myList.Pop();
+    }
+    for(i = 0;i < num;i ++) {
+        cout << arr[res[i]].Name << " ";
+    }   
+    cout << endl;
 }
