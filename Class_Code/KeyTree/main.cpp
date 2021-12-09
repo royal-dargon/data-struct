@@ -8,6 +8,7 @@
 #include <string.h>
 #include <fstream>
 #include <string>
+#include <algorithm>
 
 using namespace std;
 
@@ -33,7 +34,7 @@ class Trie {
         Trie() {
             int i;
             for(i = 0;i < 26;i ++) {
-                int num = 0;
+                num = 0;
                 next[i] = NULL;
                 flag = false;
             }
@@ -47,10 +48,20 @@ class Trie {
 
 int main() {
     Trie temp;
-    temp.Insert("hello");
-    temp.Insert("world");
-    temp.Insert("happy");
-    temp.Insert("word");
+    // temp.Insert("hello");
+    // temp.Insert("world");
+    // temp.Insert("happy");
+    // temp.Insert("word");
+    // 下面开始循环向文件中读取文字存入到键树中。
+    ifstream infile;
+    string word;
+    infile.open("word.txt");
+    cout << "现在开始从文件中读取单词。" << endl;
+    while(infile.good() && infile.peek() != EOF) {
+        infile >> word;
+        transform(word.begin(),word.end(),word.begin(),::tolower);
+        temp.Insert(word);
+    }
     string res;
     temp.Show(res);
     return 0;
@@ -63,6 +74,7 @@ void Trie::Insert(string word) {
     Trie *node = this;
     for(i = 0;i < word.size();i ++) {
         char c = word[i];
+        //cout << c << " ";
         if(node->next[c-'a'] == NULL) {
             node->next[c-'a'] = new Trie();
         }
@@ -71,6 +83,8 @@ void Trie::Insert(string word) {
         }
     }
     node->flag = true;
+    node->num = node->num + 1;
+    //cout << node->num;
 }
 
 // 展示所有单词的函数
@@ -87,12 +101,16 @@ void Trie::Show(string res) {
             node = this->next[i];
             ///cout << flag << " ";
             if(this->flag == 1) {
-                cout << res << " ";
+                cout << res << ":" << this->num << " ";
             } else {
                 node->Show(res);
                 res.erase(res.size()-1);
             }
-            //cout << node->flag << " ";
         }
     }
 }
+
+// 总结一下：目前没解决的问题主要是还有符号的问题还是没有解决
+// 同时当多个首字母出现一样的时候，会出现报错主要是三个以上时会出现问题
+// 同时在出现an a的时候会出现问题
+// 同时在只有一个字母的时候也是会出现问题
