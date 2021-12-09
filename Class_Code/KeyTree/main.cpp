@@ -6,16 +6,32 @@
 */
 #include <iostream>
 #include <string.h>
+#include <fstream>
 
 using namespace std;
 
 struct Node
 {
-    string elem;
+    char elem;
     // 用来存放兄弟节点的指针
     Node *next;
     // 用来存放第一个子树的指针
     Node *first;
+    // 如果这个节点是一个单词的结束的位置，那么这个节点将会存储这个单词在全文中出现的次数
+    int Num;
+};
+
+// 创建一个我的键树的类，里面将会有一系列的操作
+class MyTree {
+    private:
+        Node *root;
+    public:
+        MyTree() {
+            cout << "creat my key tree!" << endl;
+            root = NULL;
+        }
+        // 主要是用来对文档内部内容进行插入的操作
+        void Insert();
 };
 
 
