@@ -7,6 +7,7 @@
 #include <iostream>
 #include <string.h>
 #include <fstream>
+#include <string>
 
 using namespace std;
 
@@ -24,20 +25,34 @@ using namespace std;
 // 创建一个我的键树的类，里面将会有一系列的操作
 class Trie {
     private:
-        bool flag = false;
-        Trie *next[26] = {nullptr};
+        bool flag;
+        Trie *next[26];
         // 记录这个单词出现的次数的函数
-        int num = 0;
+        int num;
     public:
-        Trie() {}; // 构造函数
+        Trie() {
+            int i;
+            for(i = 0;i < 26;i ++) {
+                int num = 0;
+                next[i] = NULL;
+                flag = false;
+            }
+        }; // 构造函数
         // 主要是用来对文档内部内容进行插入的操作
         void Insert(string word);
         // 主要是用来展示所有的单词
-        void Show();
+        void Show(string res);
 };
 
 
 int main() {
+    Trie temp;
+    temp.Insert("hello");
+    temp.Insert("world");
+    temp.Insert("happy");
+    temp.Insert("word");
+    string res;
+    temp.Show(res);
     return 0;
 }
 
@@ -48,21 +63,36 @@ void Trie::Insert(string word) {
     Trie *node = this;
     for(i = 0;i < word.size();i ++) {
         char c = word[i];
-        if(node->next[c-'a'] == nullptr) {
+        if(node->next[c-'a'] == NULL) {
             node->next[c-'a'] = new Trie();
         }
-        node = node->next[c-'a'];
+        if(i < word.size()-1) {
+            node = node->next[c-'a'];
+        }
     }
     node->flag = true;
 }
 
 // 展示所有单词的函数
 // 在这个函数内部我想采取的方式是通过深度遍历的方式进行遍历
-void Trie::Show() {
+void Trie::Show(string res) {
     int i;
+    Trie *node;
     for(i = 0;i < 26;i ++) {
-        if(next[i] != nullptr) {
-            
+        if(next[i] != NULL) {
+            char c = i + 'a';
+            //cout << c << " ";
+            res = res + c;
+            //cout << res << " ";
+            node = this->next[i];
+            ///cout << flag << " ";
+            if(this->flag == 1) {
+                cout << res << " ";
+            } else {
+                node->Show(res);
+                res.erase(res.size()-1);
+            }
+            //cout << node->flag << " ";
         }
     }
 }
