@@ -55,6 +55,48 @@ class Student:virtual public Person {
    
 };
 
+template<class TNO, class TScore, int num>
+class MyStudent {
+    private:
+        int n;
+        TNO StudentID[num];
+        TScore score[num];
+    public: 
+        void append(TNO ID,TScore s) {
+            if(n < num) {
+                StudentID[n] = ID;
+                score[n] = s;
+                n ++;
+            }
+        }
+        void Delete(TNO ID);
+        void DisPlay() {
+            int i;
+            for(i = 0;i < n;i ++) {
+                cout << "the Id is " << StudentID[i] << " " << "the score is " << score[i] << endl;
+            }
+        }
+        MyStudent() {
+            n = 0;
+        }
+};
+
+
+
+template<class TNO,class TScore, int num>
+void MyStudent<TNO,TScore,num>::Delete(TNO ID) {
+    int i,j;
+    for(i = 0;i < n;i ++) {
+        if(StudentID[i] == ID) {
+            for(j = i;j < n;j ++) {
+                StudentID[j] = StudentID[j+1];
+                score[j] = score[j+1];
+            }
+            n--;
+        }
+    }
+}
+
 class Teacher:virtual public Person {
     private:
         string position;
@@ -88,9 +130,21 @@ class Stu_Teacher:public Teacher,public Student {
         }
 };
 
+class MyString {
+    public:
+        char Str[20];
+        MyString();
+};
+
 int main() {
     Stu_Teacher temp("张旷","女","五月一号","10086",100,"教授");
     temp.Show();
     temp.Write();
+    MyStudent<string,int,100> group1;
+    group1.append("10086",100);
+    group1.append("233",85);
+    group1.DisPlay();
+    group1.Delete("10086");
+    group1.DisPlay();
     return 0;
 }
