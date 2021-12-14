@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string>
+#include <fstream>
 
 using namespace std;
 
@@ -22,6 +23,16 @@ class Person {
             cout << "the birthday is " << birthday << endl;
             cout << "the ID is " << ID << endl;
         }
+        void Write_Info() {
+            cout << "现在开始写入这个用户的基本信息" << endl;
+            ofstream infile;
+            infile.open("info.dat");
+            infile << this->name << endl;
+            infile << this->sex << endl;
+            infile << this->birthday << endl;
+            infile << this->ID << endl;
+            infile.close();
+        }
 
 };
 
@@ -35,9 +46,12 @@ class Student:virtual public Person {
         void Show_mark() {
             cout << "the mark is " << mark << endl;
         }
-        // void Show() {
-        //     this->Show_Info();
-        // }
+        void Write_Mark() {
+            ofstream outfile;
+            outfile.open("info.dat");
+            outfile << mark << endl;
+            outfile.close();
+        }
    
 };
 
@@ -51,6 +65,12 @@ class Teacher:virtual public Person {
         void Show_Pos() {
             cout << "the position is " << position << endl;
         }
+        void Write_Pos() {
+            ofstream outfile;
+            outfile.open("info.dat");
+            outfile << position << endl;
+            outfile.close();
+        }
 };
 
 class Stu_Teacher:public Teacher,public Student {
@@ -61,10 +81,16 @@ class Stu_Teacher:public Teacher,public Student {
             this->Show_mark();
             this->Show_Pos();
         }
+        void Write() {
+            this->Write_Info();
+            this->Write_Mark();
+            this->Write_Pos();
+        }
 };
 
 int main() {
     Stu_Teacher temp("张旷","女","五月一号","10086",100,"教授");
     temp.Show();
+    temp.Write();
     return 0;
 }
