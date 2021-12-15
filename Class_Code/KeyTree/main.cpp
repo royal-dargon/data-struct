@@ -43,6 +43,7 @@ class Trie {
         void Insert(string word);
         // 主要是用来展示所有的单词
         void Show(string res);
+        void dfs(string s, Trie* node);
 };
 
 
@@ -63,7 +64,7 @@ int main() {
         temp.Insert(word);
     }
     string res;
-    temp.Show(res);
+    temp.dfs(res, &temp);
     return 0;
 }
 
@@ -78,9 +79,9 @@ void Trie::Insert(string word) {
         if(node->next[c-'a'] == NULL) {
             node->next[c-'a'] = new Trie();
         }
-        if(i < word.size()-1) {
+        // if(i < word.size()-1) {
             node = node->next[c-'a'];
-        }
+        // }
     }
     node->flag = true;
     node->num = node->num + 1;
@@ -102,12 +103,32 @@ void Trie::Show(string res) {
             ///cout << flag << " ";
             if(this->flag == 1) {
                 cout << res << ":" << this->num << " ";
-            } else {
-                node->Show(res);
-                res.erase(res.size()-1);
             }
+            node->Show(res);
+            res.erase(res.size()-1);
+          
         }
     }
+
+    
+}
+
+void Trie::dfs(string s, Trie *node) {
+    if (node == NULL) {
+        return;
+    }
+    for (int i = 0; i < 26; i++) {
+        Trie *child = node->next[i];
+        if (child != NULL) {
+            char c = i+'a';
+            string newStr = s+c;
+            if (child->flag == true) {
+                cout << newStr << ":" << child->num << " ";
+            }
+            dfs(newStr, child);
+        }
+    }
+
 }
 
 // 总结一下：目前没解决的问题主要是还有符号的问题还是没有解决
