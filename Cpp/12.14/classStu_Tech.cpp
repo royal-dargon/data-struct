@@ -47,6 +47,7 @@ class Student:virtual public Person {
             cout << "the mark is " << mark << endl;
         }
         void Write_Mark() {
+            cout << "Mark" << endl;
             ofstream outfile;
             outfile.open("info.dat");
             outfile << mark << endl;
@@ -68,6 +69,7 @@ class Teacher:virtual public Person {
             cout << "the position is " << position << endl;
         }
         void Write_Pos() {
+            cout << "Pos" << endl;
             ofstream outfile;
             outfile.open("info.dat");
             outfile << position << endl;
