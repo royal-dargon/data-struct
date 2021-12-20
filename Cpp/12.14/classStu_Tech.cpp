@@ -23,15 +23,15 @@ class Person {
             cout << "the birthday is " << birthday << endl;
             cout << "the ID is " << ID << endl;
         }
-        void Write_Info() {
+        void Write_Info(ofstream &infile) {
             cout << "现在开始写入这个用户的基本信息" << endl;
-            ofstream infile;
-            infile.open("info.dat");
+            //ofstream infile;
+            //infile.open("info.dat",ios::app);
             infile << this->name << endl;
             infile << this->sex << endl;
             infile << this->birthday << endl;
             infile << this->ID << endl;
-            infile.close();
+            //infile.close();
         }
 
 };
@@ -46,12 +46,12 @@ class Student:virtual public Person {
         void Show_mark() {
             cout << "the mark is " << mark << endl;
         }
-        void Write_Mark() {
+        void Write_Mark(ofstream &outfile) {
             cout << "Mark" << endl;
-            ofstream outfile;
-            outfile.open("info.dat");
+            //ofstream outfile;
+            //outfile.open("info.dat");
             outfile << mark << endl;
-            outfile.close();
+            //outfile.close();
         }
    
 };
@@ -68,12 +68,12 @@ class Teacher:virtual public Person {
         void Show_Pos() {
             cout << "the position is " << position << endl;
         }
-        void Write_Pos() {
+        void Write_Pos(ofstream &outfile) {
             cout << "Pos" << endl;
-            ofstream outfile;
-            outfile.open("info.dat");
+            //ofstream outfile;
+            //outfile.open("info.dat");
             outfile << position << endl;
-            outfile.close();
+            //outfile.close();
         }
 };
 
@@ -85,10 +85,11 @@ class Stu_Teacher:public Teacher,public Student {
             this->Show_mark();
             this->Show_Pos();
         }
-        void Write() {
-            this->Write_Info();
-            this->Write_Mark();
-            this->Write_Pos();
+        void Write(ofstream &infile) {
+            //ofstream infile;
+            this->Write_Info(infile);
+            this->Write_Mark(infile);
+            this->Write_Pos(infile);
         }
 };
 
@@ -99,8 +100,30 @@ class MyString {
 };
 
 int main() {
-    Stu_Teacher temp("张旷","女","五月一号","10086",100,"教授");
-    temp.Show();
-    temp.Write();
+    string name, sex, birthday,id,pos;
+    int mark;
+    ofstream infile;
+    infile.open("info.dat",ios::app);
+    Stu_Teacher temp1("张旷","女","五月一号","10086",100,"教授");
+    Stu_Teacher temp2("张三","男","十月一号","3209",99,"导师");
+    temp1.Show();
+    temp1.Write(infile);
+    temp2.Write(infile);
+    infile.close();
+    ifstream outfile;
+    outfile.open("info.dat");
+    while(outfile.peek() != EOF) {
+        outfile >> name;
+        if(outfile.eof()) {
+            break;
+        }
+        outfile >> sex;
+        outfile >> birthday;
+        outfile >> id;
+        outfile >> mark;
+        outfile >> pos;
+        cout << name << " " << sex << " " << birthday << " " << id << " " << mark << " " << pos << endl;
+    }
+    outfile.close();
     return 0;
 }
