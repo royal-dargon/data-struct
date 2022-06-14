@@ -14,6 +14,7 @@ struct outPut
 
 
 void FCFS();
+void SJF();
 
 int main() {
     int i = 0;
@@ -52,6 +53,23 @@ void FCFS() {
     }
     for(i = 0;i < 7;i ++) {
         printf("第%d个作业,进入系统的时间是%d,进入内存的时间是%d,持续的时间是%d,结束的时间是%d \n",res[i].i, res[i].inTime, res[i].osTime, res[i].time, res[i].acTime);
+    }
+}
+
+// 这是用来实现短作业优先的算法
+void SJF() {
+    int i;
+    printf("这是SJF：\n");
+    // 这是设置最开始的时间
+    int time = JCB[0][0];
+    struct outPut res[7];
+    res[0].i = 1;
+    res[0].inTime = JCB[0][0];
+    res[0].osTime = JCB[0][0];
+    res[0].time = JCB[0][1];
+    // 这个是输出部分
+    for(i = 0;i < 7; i ++) {
+        printf("第%d个作业，进入系统的时间是%d，进入内存的时间是%d，持续的时间是%d，结束的时间是%d \n", res[i].i, res[i].inTime, res[i].osTime, res[i].time, res[i].acTime);
     }
 }
 
